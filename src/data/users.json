@@ -1,0 +1,6 @@
+{
+  "users": [
+    { "id": "sam@lsu.edu", "password": "123456", "name": "Sam" },
+    { "id": "mehrasa@lsu.edu", "password": "123456!", "name": "Mehrasa" }
+  ]
+}

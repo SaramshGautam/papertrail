@@ -1,0 +1,81 @@
+/* Page shell */
+.login-wrap {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #f6f8fb;
+}
+
+/* Card */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid #e8ecf2;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial,
+    sans-serif;
+}
+
+.login-card h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  color: #142634;
+}
+
+.muted {
+  margin: 0 0 20px;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+input {
+  width: 90%;
+  padding: 12px 14px;
+  border: 1px solid #d5dbe3;
+  border-radius: 10px;
+  font-size: 0.98rem;
+  outline: none;
+  transition: border-color 0.15s;
+  background: #fff;
+}
+
+input:focus {
+  border-color: #007aff;
+}
+
+.error {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #fff3f3;
+  color: #b42318;
+  border: 1px solid #f2c2c2;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.login-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #f4b000;
+  color: #142634;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.login-btn:hover {
+  background: #ffce33;
+}

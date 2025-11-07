@@ -1,0 +1,81 @@
+/* ========== General Navbar Styling ========== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 40px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+  position: absolute;
+  /* position: sticky; */
+  top: 0;
+  width: -webkit-fill-available;
+  z-index: 100;
+  font-family: "Inter", sans-serif;
+}
+
+/* ========== Logo Section ========== */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 36px;
+  width: auto;
+}
+
+.logo-text {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #142634;
+  letter-spacing: 0.5px;
+}
+
+/* ========== Links Section ========== */
+.navbar-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #142634;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navbar-links a:hover {
+  color: #f4b000; /* golden accent */
+}
+
+/* ========== Highlighted Button ========== */
+.nav-btn {
+  background-color: #f4b000;
+  color: #142634;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.nav-btn:hover {
+  background-color: #ffce33;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 10px;
+  }
+}
