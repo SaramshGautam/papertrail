@@ -5,6 +5,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./auth/AuthContext";
 import Login from "./components/LoginPage/Login";
 import Landing from "./components/LandingPage/Landing";
+import HomePage from "./components/HomePage/HomePage";
+import PaperPage from "./components/PaperPage/PaperPage";
+import WritingPage from "./components/WritingPage/WritingPage";
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -24,6 +27,30 @@ function App() {
             element={
               <PrivateRoute>
                 <Landing />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/paper"
+            element={
+              <PrivateRoute>
+                <PaperPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/writing"
+            element={
+              <PrivateRoute>
+                <WritingPage />
               </PrivateRoute>
             }
           />
