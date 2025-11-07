@@ -6,8 +6,8 @@
   padding: 12px 40px;
   background-color: #ffffff;
   border-bottom: 1px solid #e6e6e6;
-  position: absolute;
-  /* position: sticky; */
+  /* position: absolute; */
+  position: sticky;
   top: 0;
   width: -webkit-fill-available;
   z-index: 100;
