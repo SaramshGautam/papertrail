@@ -1,0 +1,69 @@
+.paper-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+  padding: 20px;
+}
+.reader-pane {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  background: #fff;
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+}
+.pdf-placeholder {
+  text-align: center;
+}
+.muted {
+  color: #6b7280;
+}
+.notes-pane {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  background: #fff;
+  padding: 18px;
+}
+h2 {
+  margin: 4px 0 12px;
+}
+.note-form label {
+  display: block;
+  margin: 10px 0 6px;
+  color: #334155;
+}
+.note-form textarea,
+.note-form input {
+  width: 95%;
+  border: 1px solid #d5dbe3;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.98rem;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 10px;
+}
+.field.small input {
+  text-align: center;
+}
+.save-btn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: #f4b000;
+  color: #142634;
+  font-weight: 700;
+  cursor: pointer;
+}
+.helper {
+  margin-top: 10px;
+}
+@media (max-width: 1000px) {
+  .paper-layout {
+    grid-template-columns: 1fr;
+  }
+}
