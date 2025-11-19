@@ -1,57 +1,182 @@
-.home-wrap {
-  padding: 40px;
-}
-.row {
+:root {
+  --nav-h: 64px;
+} /* adjust if your navbar differs */
+
+/* .home-wrap {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: 360px 1fr;
+  height: calc(100vh - var(--nav-h)); 
+  overflow: hidden; 
+} */
+
+/* Page layout */
+.home-wrap {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  height: calc(100vh - 80px);
+  background: #000;
 }
-.panel {
-  border: 1px solid #e6e6e6;
-  border-radius: 12px;
-  padding: 20px;
-  background: #fff;
-}
-.panel-head {
+
+/* LEFT RAIL */
+.left-rail {
+  background: #f4f5f7;
+  border-right: 1px solid #dcdfe4;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  flex-direction: column;
 }
-.mini-btn {
-  border: 1px solid #e6e6e6;
-  background: #f7f7f7;
+
+.rail-topbar {
+  background: #cfcfcf;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  font-weight: 600;
+  color: #111;
+  border-bottom: 1px solid #dcdfe4;
+}
+
+.rail-title {
+  font-size: 1.1rem;
+}
+.icon-btn {
+  border: none;
+  background: #e9eaee;
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+/* List */
+.paper-list {
+  margin: 0;
+  padding: 8px 0;
+  list-style: none;
+  overflow: auto;
+}
+
+.paper-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 18px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 6px 10px;
+  cursor: pointer;
+  background: #f3f4f7;
+}
+
+.paper-item:hover {
+  background: #eef0f4;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #ddd;
+}
+
+.paper-text {
+  min-width: 0;
+}
+.paper-title {
+  color: #111;
+  font-weight: 600;
+}
+.paper-sub {
+  font-size: 0.88rem;
+  color: #7a7f87;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chev {
+  color: #9aa1aa;
+}
+
+/* RIGHT SIDE */
+.canvas-wrap {
+  display: grid;
+  grid-template-rows: 48px 1fr;
+  background: #000; /* shows around the canvas */
+  position: relative;
+}
+
+/* Topbar */
+.topbar {
+  background: #cfcfcf;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #4a4a4a;
+}
+
+.title {
+  font-weight: 700;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #e5e6eb;
+  border-radius: 999px;
   padding: 6px 10px;
+}
+.search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 220px;
+}
+.profile-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #9db3ff;
+}
+
+/* Canvas */
+.canvas-area {
+  position: relative;
+  height: 100%;
+}
+.canvas-area .tl-theme__light,
+.canvas-area .tl-theme__dark {
+  /* make TLDraw fit and show its canvas */
+  position: absolute;
+  inset: 0;
+}
+
+/* Floating Write button */
+.write-cta {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  background: #e8e6de;
+  border: 1px solid #d1cfc7;
+  color: #111;
+  padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
 }
-h2 {
-  margin: 0 0 8px;
-  color: #142634;
+
+/* Hide grid if visible in your build */
+.canvas-area .tl-grid {
+  display: none !important;
 }
-.list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 10px;
-}
-.title {
-  display: block;
-  color: #142634;
-}
-.meta {
-  color: #6b7280;
-  font-size: 0.92rem;
-}
-.link {
-  display: inline-block;
-  margin-top: 10px;
-  text-decoration: none;
-  color: #007aff;
-}
-@media (max-width: 900px) {
-  .row {
-    grid-template-columns: 1fr;
-  }
+
+/* Keep black backdrop around the canvas as per your mock */
+.canvas-wrap {
+  background: #000;
 }

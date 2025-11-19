@@ -1,0 +1,62 @@
+[
+  {
+    "id": "chi24-01",
+    "title": "Rambler: Gist-Level Editing of Dictated Text with LLM Support",
+    "authors": ["Saurabh Srivastava", "Björn Hartmann", "et al."],
+    "abstract": "Introduces a writing interface that lets users restructure and refine dictated prose by operating on high-level 'gists.' The system uses LLMs to extract, group, and transform segments while preserving author intent, improving speed and organization during early drafting."
+  },
+  {
+    "id": "chi24-02",
+    "title": "VAL: Interactive Task Learning with GPT Dialog Parsing",
+    "authors": ["Lane Lawley", "Christopher J. MacLellan"],
+    "abstract": "Presents an agent that learns tasks from natural-language demonstrations. By parsing dialog with an LLM and mapping to executable steps, non-programmers teach new tasks interactively, reducing setup overhead and improving generalization."
+  },
+  {
+    "id": "chi24-03",
+    "title": "The Value, Benefits, and Concerns of Generative AI at Work",
+    "authors": ["Zijian Li", "et al."],
+    "abstract": "A multi-industry study of early GenAI adoption in knowledge work. Reports productivity and creativity gains alongside concerns about accuracy, privacy, policy gaps, and shifting skills; provides design implications for safer, more transparent tooling."
+  },
+  {
+    "id": "chi24-04",
+    "title": "Design Principles for Generative AI Applications",
+    "authors": ["Justin D. Weisz", "Jessica He", "Michael Muller", "et al."],
+    "abstract": "Synthesizes six actionable principles for GenAI UX (e.g., steerability, recoverability, provenance cues). Offers guidance for integrating model affordances with human goals, uncertainty handling, and ethical constraints."
+  },
+  {
+    "id": "chi24-05",
+    "title": "The Metacognitive Demands of Using Generative AI",
+    "authors": ["Lia Tankelevitch", "et al."],
+    "abstract": "Argues that GenAI tools shift cognitive load from content creation to metacognitive monitoring (planning, checking, calibrating trust). Recommends interface supports that scaffold verification and reflection without over-automation."
+  },
+  {
+    "id": "chi24-06",
+    "title": "Effects of AI Image Generators on Design Fixation and Divergence",
+    "authors": ["S. Wadinambiarachchi", "et al."],
+    "abstract": "Controlled study shows AI image prompts can both spark new directions and increase fixation on initial concepts. Suggests pacing, diversity controls, and provenance reminders to balance divergence and commitment."
+  },
+  {
+    "id": "chi24-07",
+    "title": "Towards Directive Explanations for Actionable Human–AI Interaction",
+    "authors": ["Aditya Bhattacharya"],
+    "abstract": "Proposes 'directive explanations' that tell users what to do next rather than only why a model acted. Outlines patterns for surfacing constraints, alternatives, and trade-offs to make explanations operational in real workflows."
+  },
+  {
+    "id": "chi23-01",
+    "title": "Mind the Gap: Provenance Cues for Evidence Reuse in Writing",
+    "authors": ["(CHI authorship example)"],
+    "abstract": "Compares citation recall with and without lightweight provenance cues (source, page anchors, extraction context). Finds faster retrieval and fewer misattributions when cues are embedded at capture time and resurfaced during writing."
+  },
+  {
+    "id": "chi22-01",
+    "title": "Faceted Comparison Tables for Method Synthesis",
+    "authors": ["(CHI authorship example)"],
+    "abstract": "Introduces a workflow to map highlights to structured facets (constructs, instruments, samples). Visual gaps reveal missing evidence and inconsistencies, improving cross-paper synthesis for design justifications."
+  },
+  {
+    "id": "chi21-01",
+    "title": "Contextual Re-Surfacing of Notes During Drafting",
+    "authors": ["(CHI authorship example)"],
+    "abstract": "Detects claim-like sentences as users write and suggests linked notes with citations. Reduces searching and tab-switching while keeping authors in control of wording and verification."
+  }
+]

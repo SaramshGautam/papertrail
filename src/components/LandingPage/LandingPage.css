@@ -1,25 +1,30 @@
 .landing-wrap {
   padding: 60px 40px;
 }
+
 .landing-hero {
   text-align: center;
   margin-bottom: 48px;
 }
+
 .landing-hero h1 {
   font-size: 2.2rem;
   color: #142634;
   margin: 0;
 }
+
 .sub {
   color: #4a4a4a;
   margin: 8px 0 20px;
 }
+
 .cta-row {
   display: flex;
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
 }
+
 .btn {
   padding: 10px 16px;
   border-radius: 8px;
@@ -27,11 +32,84 @@
   text-decoration: none;
   color: #142634;
 }
+
 .btn.primary {
   background: #f4b000;
   border-color: #f4b000;
   font-weight: 700;
 }
+
+/* ===== Project Grid Section ===== */
+.project-section {
+  max-width: 1100px;
+  margin: 0 auto 60px;
+}
+
+.project-section h2 {
+  margin-bottom: 16px;
+  color: #142634;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.project-card {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 20px;
+  background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.project-card h3 {
+  margin: 0 0 6px;
+  color: #142634;
+}
+
+.project-card p {
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.open-link {
+  text-decoration: none;
+  color: #007aff;
+  font-weight: 500;
+}
+
+/* Add New Project Card */
+.add-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  cursor: pointer;
+  border: 2px dashed #d5dbe3;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.add-card:hover {
+  background: #fffbe6;
+  border-color: #f4b000;
+}
+
+.add-symbol {
+  font-size: 2.2rem;
+  color: #f4b000;
+  margin-bottom: 6px;
+}
+
+/* ===== Feature Grid ===== */
 .landing-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -39,18 +117,24 @@
   max-width: 1100px;
   margin: 28px auto 0;
 }
+
 .card {
   border: 1px solid #e6e6e6;
   border-radius: 12px;
   padding: 18px;
   background: #fff;
 }
+
 .card h3 {
   margin: 0 0 8px;
   color: #142634;
 }
+
 @media (max-width: 900px) {
   .landing-grid {
+    grid-template-columns: 1fr;
+  }
+  .project-grid {
     grid-template-columns: 1fr;
   }
 }

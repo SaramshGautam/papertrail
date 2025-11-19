@@ -1,6 +1,6 @@
 import React from "react";
 import "./navbar.css";
-import logo from "../../../public/logo.png";
+import logo from "../../assets/logo.png";
 
 function NavBar() {
   return (
