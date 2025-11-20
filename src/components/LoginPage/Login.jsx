@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import usersData from "../../data/users.json";
 import { useAuth } from "../../auth/AuthContext";
-import "./Login.css";
+import "./login.css";
 
 export default function Login() {
   const [id, setId] = useState("");
