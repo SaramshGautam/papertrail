@@ -1,8 +1,57 @@
-/* Make SVG background white */
+.force-graph-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .force-graph-svg {
   width: 100%;
   height: 100%;
   background: #f4f2eb !important;
+}
+
+.fg-tooltip {
+  position: absolute;
+  pointer-events: none;
+  max-width: 320px;
+  background: #f0ead2; /* base */
+  color: #6c584c; /* accent text */
+  padding: 10px 12px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  border: 1px solid #6c584c; /* accent border */
+  font-size: 0.86rem;
+  opacity: 0;
+  transition: opacity 0.12s ease-out;
+  z-index: 10;
+}
+
+.fg-tooltip-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #6c584c;
+}
+
+.fg-tooltip-author {
+  font-size: 0.8rem;
+  color: rgba(108, 88, 76, 0.8); /* brown, lighter */
+  margin-bottom: 6px;
+}
+
+.fg-tooltip-abstract {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: #6c584c;
+}
+
+.fg-tooltip-abstract::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 2px;
+  border-radius: 999px;
+  background: #adc178; /* 20% green accent */
+  margin-bottom: 6px;
 }
 
 /* Make all text black */

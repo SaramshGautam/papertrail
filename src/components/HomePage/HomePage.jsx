@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom"; // 👈 import Link
 import ForceGraph from "../ForceGraph/ForceGraph";
 import {
@@ -18,6 +18,8 @@ import {
   orderBy,
   serverTimestamp,
   increment,
+  getDocs,
+  deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -58,6 +60,41 @@ async function computeSimilaritiesForProject(projectId, papers) {
   }
 }
 
+async function recomputeSimilaritiesForProject(projectId, papers) {
+  if (!projectId || !papers || !papers.length) return;
+
+  try {
+    console.log("[SIM] Recomputing similarities for project:", projectId);
+
+    const simResults = await computeSimilaritiesForProject(projectId, papers);
+    const simCol = collection(db, "projects", projectId, "similarities");
+
+    // delete old similarity docs
+    const existing = await getDocs(simCol);
+    const deletions = existing.docs.map((d) => deleteDoc(d.ref));
+    await Promise.all(deletions);
+
+    if (!simResults.length) {
+      console.log("[SIM] No similarity results returned");
+      return;
+    }
+
+    // write new similarity docs
+    const writes = simResults.map((entry) =>
+      addDoc(simCol, {
+        ...entry,
+        projectId,
+        createdAt: serverTimestamp(),
+      })
+    );
+
+    await Promise.all(writes);
+    console.log("[SIM] Saved similarity entries:", simResults.length);
+  } catch (err) {
+    console.error("[SIM] Error recomputing similarities", err);
+  }
+}
+
 async function ingestPaperMetadata({ projectId, paperId, fileUrl }) {
   try {
     const res = await fetch(INGEST_ENDPOINT, {
@@ -93,7 +130,24 @@ export default function HomePage() {
   const [similarities, setSimilarities] = useState([]);
   const [metric, setMetric] = useState("overall");
   const [minScore, setMinScore] = useState(0.4);
-  const [selectedPaper, setSelectedPaper] = useState(null); // 👈 used for highlighting / routing
+  const [selectedPaper, setSelectedPaper] = useState(null);
+  const [projectInfo, setProjectInfo] = useState(null);
+
+  const prevPaperCountRef = useRef(0);
+
+  //get project name
+  useEffect(() => {
+    if (!projectId) return;
+
+    const ref = doc(db, "projects", projectId);
+    const unsub = onSnapshot(ref, (snap) => {
+      if (snap.exists()) {
+        setProjectInfo(snap.data());
+      }
+    });
+
+    return () => unsub();
+  }, [projectId]);
 
   // Fetch papers
   useEffect(() => {
@@ -117,6 +171,21 @@ export default function HomePage() {
 
     return () => unsubscribe();
   }, [projectId]);
+
+  // Auto recompute similarities:
+  // - once when we first have papers
+  // - again whenever the number of papers changes (new paper added / one removed)
+  useEffect(() => {
+    if (!projectId) return;
+    if (!papers.length) return;
+
+    if (prevPaperCountRef.current === papers.length) {
+      return;
+    }
+
+    prevPaperCountRef.current = papers.length;
+    recomputeSimilaritiesForProject(projectId, papers);
+  }, [projectId, papers.length, papers]);
 
   // Fetch similarities
   useEffect(() => {
@@ -223,48 +292,55 @@ export default function HomePage() {
     e.target.value = "";
   };
 
-  const handleComputeSimilarities = async () => {
-    if (!projectId) return;
-    if (!papers.length) {
-      console.log("[SIM] No papers to compare");
-      return;
-    }
+  // const handleComputeSimilarities = async () => {
+  //   if (!projectId) return;
+  //   if (!papers.length) {
+  //     console.log("[SIM] No papers to compare");
+  //     return;
+  //   }
 
-    console.log("[SIM] Computing similarities for project:", projectId);
+  //   console.log("[SIM] Computing similarities for project:", projectId);
 
-    const simResults = await computeSimilaritiesForProject(projectId, papers);
-    if (!simResults.length) {
-      console.log("[SIM] No similarity results returned");
-      return;
-    }
+  //   const simResults = await computeSimilaritiesForProject(projectId, papers);
+  //   if (!simResults.length) {
+  //     console.log("[SIM] No similarity results returned");
+  //     return;
+  //   }
 
-    try {
-      const simCol = collection(db, "projects", projectId, "similarities");
+  //   try {
+  //     const simCol = collection(db, "projects", projectId, "similarities");
 
-      const writes = simResults.map((entry) =>
-        addDoc(simCol, {
-          ...entry,
-          projectId,
-          createdAt: serverTimestamp(),
-        })
-      );
+  //     const writes = simResults.map((entry) =>
+  //       addDoc(simCol, {
+  //         ...entry,
+  //         projectId,
+  //         createdAt: serverTimestamp(),
+  //       })
+  //     );
 
-      await Promise.all(writes);
-      console.log(
-        "[SIM] Saved similarity entries to Firestore:",
-        simResults.length
-      );
-    } catch (err) {
-      console.error("[SIM] Error writing similarities to Firestore", err);
-    }
-  };
+  //     await Promise.all(writes);
+  //     console.log(
+  //       "[SIM] Saved similarity entries to Firestore:",
+  //       simResults.length
+  //     );
+  //   } catch (err) {
+  //     console.error("[SIM] Error writing similarities to Firestore", err);
+  //   }
+  // };
 
   return (
     <div className="home-wrap">
       {/* LEFT RAIL */}
       <aside className="left-rail">
         <div className="rail-topbar">
-          <div className="rail-title">Papers</div>
+          {/* <div className="rail-title">Papers</div> */}
+          <div className="title">
+            {projectInfo?.title ? (
+              <>
+                <span className="project-name">{projectInfo.title}</span>
+              </>
+            ) : null}
+          </div>
 
           <label className="icon-btn" title="Add paper pdf">
             ＋
@@ -276,14 +352,14 @@ export default function HomePage() {
             />
           </label>
 
-          <button
+          {/* <button
             className="icon-btn"
             type="button"
             onClick={handleComputeSimilarities}
             title="Compute similarities between papers"
           >
             ⇆
-          </button>
+          </button> */}
         </div>
 
         <ul className="paper-list">
@@ -296,7 +372,7 @@ export default function HomePage() {
                   ? " is-selected"
                   : "")
               }
-              onClick={() => setSelectedPaper(p)} // 👈 FIXED: update selectedPaper
+              onClick={() => setSelectedPaper(p)}
             >
               <div className="avatar" />
               <div className="paper-text">
@@ -339,7 +415,7 @@ export default function HomePage() {
             </label>
 
             <label className="metric-select">
-              Min score: {minScore.toFixed(2)}
+              Similarity Threshold: {minScore.toFixed(2)}
               <input
                 type="range"
                 min="0"

@@ -26,6 +26,12 @@
   flex-direction: column;
 }
 
+.project-name {
+  font-weight: 600;
+  color: #5d6b00; /* muted olive tone */
+  margin-right: 6px;
+}
+
 .rail-topbar {
   background: #adc178;
   display: flex;
@@ -186,8 +192,9 @@
   border-radius: 6px;
   border: 1px solid #e6e1d0;
   background: #f0ead2;
-  color: #3e352f;
+  color: #3b2c20;
   font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .metric-select input[type="range"] {
@@ -223,20 +230,22 @@
 }
 
 .btn.small {
-  padding: 10px 12px;
-  border-radius: 9px;
-  border: 1px solid #f0ead2;
-  background: #6c584c;
-  color: #f0ead2;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #d7c8aa;
+  background: #f7f2e6;
+  color: #3b2c20;
+  font-size: 0.84rem;
+  font-weight: 500;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 
 .btn.small:hover {
-  background: #57453a;
+  background: #ede4cf;
+  border-color: #a8b96e;
   box-shadow: 0 2px 6px rgba(108, 88, 76, 0.3);
   transform: translateY(-1px);
 }
