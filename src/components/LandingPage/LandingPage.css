@@ -1,5 +1,9 @@
 .landing-wrap {
+  min-height: 100vh;
   padding: 60px 40px;
+  background: #f0ead2;
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .landing-hero {
@@ -8,14 +12,16 @@
 }
 
 .landing-hero h1 {
-  font-size: 2.2rem;
-  color: #142634;
+  font-size: 2.4rem;
+  color: #6c584c;
   margin: 0;
+  letter-spacing: 0.03em;
 }
 
 .sub {
-  color: #4a4a4a;
+  color: #6c584ccc; /* softer tertiary */
   margin: 8px 0 20px;
+  font-size: 1rem;
 }
 
 .cta-row {
@@ -26,19 +32,34 @@
 }
 
 .btn {
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 1px solid #e6e6e6;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid #adc178; /* secondary */
   text-decoration: none;
-  color: #142634;
+  color: #6c584c;
+  background: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
 }
 
 .btn.primary {
-  background: #f4b000;
-  border-color: #f4b000;
+  background: #6c584c;
+  border-color: #6c584c;
+  color: #f0ead2;
   font-weight: 700;
 }
 
+.btn:hover {
+  background: #f7f3e2;
+  box-shadow: 0 3px 8px rgba(108, 88, 76, 0.16);
+  transform: translateY(-1px);
+}
+
+.btn.primary:hover {
+  background: #57453a;
+}
 /* ===== Project Grid Section ===== */
 .project-section {
   max-width: 1100px;
@@ -47,7 +68,8 @@
 
 .project-section h2 {
   margin-bottom: 16px;
-  color: #142634;
+  color: #6c584c;
+  font-size: 1.4rem;
 }
 
 .project-grid {
@@ -57,33 +79,39 @@
 }
 
 .project-card {
-  border: 1px solid #e6e6e6;
-  border-radius: 12px;
+  border: 1px solid #adc178; /* secondary */
+  border-radius: 14px;
   padding: 20px;
-  background: #fff;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .project-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 14px rgba(108, 88, 76, 0.12);
+  border-color: #6c584c;
 }
 
 .project-card h3 {
   margin: 0 0 6px;
-  color: #142634;
+  color: #6c584c;
 }
 
 .project-card p {
-  color: #4a4a4a;
+  color: #4b463f;
   font-size: 0.95rem;
   margin-bottom: 12px;
 }
 
 .open-link {
   text-decoration: none;
-  color: #007aff;
+  color: #6c584c;
   font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.open-link:hover {
+  text-decoration: underline;
 }
 
 /* Add New Project Card */
@@ -92,20 +120,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa;
+  background: #f7f3e2;
   cursor: pointer;
-  border: 2px dashed #d5dbe3;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  border: 2px dashed #adc178;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s;
 }
 
 .add-card:hover {
-  background: #fffbe6;
-  border-color: #f4b000;
+  background: #f0ead2;
+  border-color: #6c584c;
+  transform: translateY(-2px);
 }
 
 .add-symbol {
   font-size: 2.2rem;
-  color: #f4b000;
+  color: #6c584c;
   margin-bottom: 6px;
 }
 
@@ -119,15 +148,21 @@
 }
 
 .card {
-  border: 1px solid #e6e6e6;
+  border: 1px solid #adc178;
   border-radius: 12px;
   padding: 18px;
-  background: #fff;
+  background: #ffffffe5;
 }
 
 .card h3 {
   margin: 0 0 8px;
-  color: #142634;
+  color: #6c584c;
+}
+
+.card p {
+  margin: 0;
+  color: #4b463f;
+  font-size: 0.94rem;
 }
 
 @media (max-width: 900px) {
@@ -139,6 +174,7 @@
   }
 }
 
+/* ===== New Project Form ===== */
 .add-project-form {
   display: flex;
   flex-direction: column;
@@ -150,6 +186,7 @@
   flex-direction: column;
   gap: 0.25rem;
   font-size: 0.85rem;
+  color: #6c584c;
 }
 
 .add-project-form input[type="text"],
@@ -157,8 +194,18 @@
 .add-project-form input[type="file"] {
   font-size: 0.9rem;
   padding: 0.4rem 0.6rem;
-  border-radius: 6px;
-  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  border: 1px solid #d2cfbd;
+  background: #ffffff;
+  color: #4b463f;
+}
+
+.add-project-form input[type="text"]:focus,
+.add-project-form textarea:focus,
+.add-project-form input[type="file"]:focus {
+  outline: none;
+  border-color: #6c584c;
+  box-shadow: 0 0 0 2px rgba(108, 88, 76, 0.2);
 }
 
 .form-actions {
@@ -169,5 +216,98 @@
 
 .project-meta {
   font-size: 0.8rem;
-  color: #666;
+  color: #6c584cb3;
+}
+
+.features-section {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+}
+
+.features-section h2 {
+  margin-bottom: 16px;
+  color: #6c584c;
+  font-size: 1.4rem;
+}
+
+/* icon button for edit */
+.icon-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* position + hide by default */
+.project-card {
+  position: relative;
+  /* existing styles stay */
+}
+
+.edit-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #6c584c;
+  background: #f0ead2;
+  border-radius: 999px;
+  padding: 4px 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  font-size: 0.85rem;
+}
+
+.project-card:hover .edit-btn {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(108, 88, 76, 0.25);
+}
+
+.edit-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-project-form h3 {
+  margin: 0 0 6px;
+  color: #6c584c;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* labels inside form */
+.edit-project-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.edit-project-form .field span {
+  font-size: 0.85rem;
+  color: #6c584c;
+  font-weight: 500;
+}
+
+/* inputs + textarea */
+.edit-project-form input[type="text"],
+.edit-project-form textarea {
+  font-size: 0.92rem;
+  padding: 8px 10px;
+  border: 1px solid #d8d2c4;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #463f38; /* slightly darker text */
+
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.edit-project-form input[type="text"]:focus,
+.edit-project-form textarea:focus {
+  outline: none;
+  border-color: #6c584c; /* accent */
+  box-shadow: 0 0 0 2px rgba(108, 88, 76, 0.18);
 }

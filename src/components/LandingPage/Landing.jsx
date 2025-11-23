@@ -1,229 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
-// import "./LandingPage.css";
-// import { db } from "../../firebaseConfig";
-
-// import {
-//   collection,
-//   addDoc,
-//   onSnapshot,
-//   serverTimestamp,
-//   query,
-//   orderBy,
-// } from "firebase/firestore";
-
-// export default function Landing() {
-//   // const [projects, setProjects] = useState([
-//   //   {
-//   //     id: 1,
-//   //     title: "Multimodal Ideation Study",
-//   //     desc: "Analyzing design behaviors from collaborative sessions.",
-//   //     files: [],
-//   //   },
-//   //   {
-//   //     id: 2,
-//   //     title: "LINC Paper Revision",
-//   //     desc: "Tracking updates and literature for multilingual meeting tools.",
-//   //     files: [],
-//   //   },
-//   //   {
-//   //     id: 3,
-//   //     title: "Thesis Reading Notes",
-//   //     desc: "Capturing highlights and quotes from core HCI readings.",
-//   //     files: [],
-//   //   },
-//   // ]);
-
-//   // UI state for the “add project” form
-
-//   const [projects, setProjects] = useState([]);
-//   const [isAdding, setIsAdding] = useState(false);
-//   const [newTitle, setNewTitle] = useState("");
-//   const [newDesc, setNewDesc] = useState("");
-//   const [newFiles, setNewFiles] = useState([]);
-
-//   useEffect(() => {
-//     const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
-
-//     const unsub = onSnapshot(q, (snapshot) => {
-//       const docs = snapshot.docs.map((doc) => ({
-//         id: doc.id,
-//         ...doc.data(),
-//       }));
-//       setProjects(docs);
-//     });
-//     return () => unsub();
-//   }, []);
-
-//   const handleFilesChange = (e) => {
-//     const fileList = Array.from(e.target.files || []);
-//     setNewFiles(fileList);
-//   };
-
-//   const resetForm = () => {
-//     setNewTitle("");
-//     setNewDesc("");
-//     setNewFiles([]);
-//     setIsAdding(false);
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!newTitle.trim()) {
-//       alert("Please enter a project title.");
-//       return;
-//     }
-
-//     try {
-//       await addDoc(collection(db, "projects"), {
-//         title: newTitle.trim(),
-//         desc: newDesc.trim(),
-//         pdfCount: newFiles.length,
-//         createdAt: serverTimestamp(),
-//       });
-//       resetForm();
-//     } catch (err) {
-//       console.error("Error adding project", err);
-//       alert("Could not save project, check console for details.");
-//     }
-//   };
-
-//   //   const newProject = {
-//   //     id: Date.now(),
-//   //     title: newTitle.trim(),
-//   //     desc: newDesc.trim() || "No description yet.",
-//   //     files: newFiles,
-//   //   };
-
-//   //   setProjects((prev) => [...prev, newProject]);
-//   //   resetForm();
-//   // };
-
-//   return (
-//     <div className="landing-wrap">
-//       <section className="landing-hero">
-//         <h1>PaperTrail</h1>
-//         <p className="sub">Read deeply. Capture clearly. Reuse confidently.</p>
-//         <div className="cta-row">
-//           <Link to="/home" className="btn primary">
-//             Go to Home
-//           </Link>
-//           <Link to="/paper" className="btn">
-//             Open Paper Workspace
-//           </Link>
-//           <Link to="/writing" className="btn">
-//             Start Writing
-//           </Link>
-//         </div>
-//       </section>
-
-//       {/* ===== Project Grid Section ===== */}
-//       <section className="project-section">
-//         <h2>Your Projects</h2>
-//         <div className="project-grid">
-//           {projects.map((p) => (
-//             <div key={p.id} className="project-card">
-//               <h3>{p.title}</h3>
-//               <p>{p.desc}</p>
-
-//               {p.files && p.files.length > 0 && (
-//                 <p className="project-meta">
-//                   {p.files.length} PDF{p.files.length > 1 ? "s" : ""} attached
-//                 </p>
-//               )}
-
-//               <Link to="/home" className="open-link">
-//                 Open Project →
-//               </Link>
-//             </div>
-//           ))}
-
-//           {/* Add New Project Card */}
-//           {!isAdding ? (
-//             <div
-//               className="project-card add-card"
-//               onClick={() => setIsAdding(true)}
-//             >
-//               <div className="add-symbol">＋</div>
-//               <p>Add New Project</p>
-//             </div>
-//           ) : (
-//             <div className="project-card add-card">
-//               <form className="add-project-form" onSubmit={handleSubmit}>
-//                 <h3>New Project</h3>
-
-//                 <label className="field">
-//                   <span>Title</span>
-//                   <input
-//                     type="text"
-//                     value={newTitle}
-//                     onChange={(e) => setNewTitle(e.target.value)}
-//                     placeholder="e.g., CHI 2026 Thesis Project"
-//                     required
-//                   />
-//                 </label>
-
-//                 <label className="field">
-//                   <span>Description</span>
-//                   <textarea
-//                     rows={3}
-//                     value={newDesc}
-//                     onChange={(e) => setNewDesc(e.target.value)}
-//                     placeholder="Short description of what this project is about."
-//                   />
-//                 </label>
-
-//                 <label className="field">
-//                   <span>Attach PDFs</span>
-//                   <input
-//                     type="file"
-//                     accept="application/pdf"
-//                     multiple
-//                     onChange={handleFilesChange}
-//                   />
-//                   {newFiles.length > 0 && (
-//                     <p className="project-meta">
-//                       {newFiles.length} PDF{newFiles.length > 1 ? "s" : ""}{" "}
-//                       selected
-//                     </p>
-//                   )}
-//                 </label>
-
-//                 <div className="form-actions">
-//                   <button type="submit" className="btn primary">
-//                     Save Project
-//                   </button>
-//                   <button type="button" className="btn" onClick={resetForm}>
-//                     Cancel
-//                   </button>
-//                 </div>
-//               </form>
-//             </div>
-//           )}
-//         </div>
-//       </section>
-
-//       {/* ===== Features Section ===== */}
-//       <section className="landing-grid">
-//         <div className="card">
-//           <h3>Semantic Search</h3>
-//           <p>
-//             Find ideas by meaning and resurface citations with page anchors.
-//           </p>
-//         </div>
-//         <div className="card">
-//           <h3>Linked Notes</h3>
-//           <p>Turn highlights into reusable insight cards with provenance.</p>
-//         </div>
-//         <div className="card">
-//           <h3>Contextual Cite</h3>
-//           <p>Get gentle “Found in Smith 2022” cues while drafting.</p>
-//         </div>
-//       </section>
-//     </div>
-//   );
-// }
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
@@ -286,6 +60,10 @@ export default function Landing() {
   const [newDesc, setNewDesc] = useState("");
   const [newFiles, setNewFiles] = useState([]);
 
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDesc, setEditDesc] = useState("");
+
   // Listen to projects from Firestore
   useEffect(() => {
     const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
@@ -304,6 +82,36 @@ export default function Landing() {
   const handleFilesChange = (e) => {
     const fileList = Array.from(e.target.files || []);
     setNewFiles(fileList);
+  };
+
+  const startEditProject = (project) => {
+    setEditingId(project.id);
+    setEditTitle(project.title || "");
+    setEditDesc(project.desc || "");
+  };
+
+  const cancelEditProject = () => {
+    setEditingId(null);
+    setEditTitle("");
+    setEditDesc("");
+  };
+
+  const handleUpdateProject = async (e, projectId) => {
+    e.preventDefault();
+    if (!editTitle.trim()) {
+      alert("Title cannot be empty.");
+      return;
+    }
+    try {
+      await updateDoc(doc(db, "projects", projectId), {
+        title: editTitle.trim(),
+        desc: editDesc.trim(),
+      });
+      cancelEditProject();
+    } catch (err) {
+      console.error("Error updating project", err);
+      alert("Could not update project, check console for details.");
+    }
   };
 
   const resetForm = () => {
@@ -467,7 +275,7 @@ export default function Landing() {
       <section className="landing-hero">
         <h1>PaperTrail</h1>
         <p className="sub">Read deeply. Capture clearly. Reuse confidently.</p>
-        <div className="cta-row">
+        {/* <div className="cta-row">
           <Link to={`/landing`} className="btn primary">
             Go to Home
           </Link>
@@ -477,14 +285,14 @@ export default function Landing() {
           <Link to="/writing" className="btn">
             Start Writing
           </Link>
-        </div>
+        </div> */}
       </section>
 
       {/* ===== Project Grid Section ===== */}
       <section className="project-section">
         <h2>Your Projects</h2>
         <div className="project-grid">
-          {projects.map((p) => (
+          {/* {projects.map((p) => (
             <div key={p.id} className="project-card">
               <h3>{p.title}</h3>
               <p>{p.desc}</p>
@@ -498,6 +306,77 @@ export default function Landing() {
               <Link to={`/home/${p.id}`} className="open-link">
                 Open Project →
               </Link>
+            </div>
+          ))} */}
+
+          {projects.map((p) => (
+            <div key={p.id} className="project-card">
+              {/* edit icon – shows on hover */}
+              <button
+                type="button"
+                className="icon-button edit-btn"
+                onClick={() => startEditProject(p)}
+              >
+                <i className="fas fa-pen"></i>
+              </button>
+
+              {editingId === p.id ? (
+                // EDIT MODE
+                <form
+                  className="edit-project-form"
+                  onSubmit={(e) => handleUpdateProject(e, p.id)}
+                >
+                  <h3>Edit Project</h3>
+
+                  <label className="field">
+                    <span>Title</span>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      required
+                    />
+                  </label>
+
+                  <label className="field">
+                    <span>Description</span>
+                    <textarea
+                      rows={3}
+                      value={editDesc}
+                      onChange={(e) => setEditDesc(e.target.value)}
+                    />
+                  </label>
+
+                  <div className="form-actions">
+                    <button type="submit" className="btn primary">
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={cancelEditProject}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                // VIEW MODE
+                <>
+                  <h3>{p.title}</h3>
+                  <p>{p.desc}</p>
+
+                  {typeof p.pdfCount === "number" && p.pdfCount > 0 && (
+                    <p className="project-meta">
+                      {p.pdfCount} PDF{p.pdfCount > 1 ? "s" : ""} attached
+                    </p>
+                  )}
+
+                  <Link to={`/home/${p.id}`} className="open-link">
+                    Open Project →
+                  </Link>
+                </>
+              )}
             </div>
           ))}
 
@@ -567,37 +446,24 @@ export default function Landing() {
       </section>
 
       {/* ===== Features Section ===== */}
-      <section className="landing-grid">
-        <div className="card">
-          <h3>Semantic Search</h3>
-          <p>
-            Find ideas by meaning and resurface citations with page anchors.
-          </p>
+      <section className="features-section">
+        <h2>Features</h2>
+        <div className="landing-grid">
+          <div className="card">
+            <h3>Semantic Search</h3>
+            <p>
+              Find ideas by meaning and resurface citations with page anchors.
+            </p>
+          </div>
+          <div className="card">
+            <h3>Linked Notes</h3>
+            <p>Turn highlights into reusable insight cards with provenance.</p>
+          </div>
+          <div className="card">
+            <h3>Contextual Cite</h3>
+            <p>Get gentle “Found in Smith 2022” cues while drafting.</p>
+          </div>
         </div>
-        <div className="card">
-          <h3>Linked Notes</h3>
-          <p>Turn highlights into reusable insight cards with provenance.</p>
-        </div>
-        <div className="card">
-          <h3>Contextual Cite</h3>
-          <p>Get gentle “Found in Smith 2022” cues while drafting.</p>
-        </div>
-      </section>
-
-      {/* ABOUT SECTION – this is what /landing#about will scroll to */}
-      <section id="about" className="about-section">
-        <h2>About PaperTrail</h2>
-        <p>
-          PaperTrail helps you move from scattered PDFs and ad-hoc notes to a
-          connected, reusable library of insights. Upload papers into projects,
-          auto-extract metadata and abstracts, and explore how your readings
-          relate to each other through similarity maps.
-        </p>
-        <p>
-          When you start drafting, PaperTrail surfaces relevant papers and prior
-          notes in context, so you can cite confidently without breaking your
-          writing flow.
-        </p>
       </section>
     </div>
   );
