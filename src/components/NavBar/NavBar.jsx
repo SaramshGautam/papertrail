@@ -6,7 +6,6 @@ import logo from "../../assets/logo.png";
 function NavBar() {
   return (
     <nav className="navbar">
-      {/* Logo → main landing/projects page */}
       <div className="navbar-logo">
         <Link to="/landing" className="logo-link">
           <img src={logo} alt="PaperTrail Logo" className="logo-img" />
@@ -15,29 +14,6 @@ function NavBar() {
       </div>
 
       <ul className="navbar-links">
-        {/* These keep the same labels, but now use routes */}
-        {/* <li>
-          <NavLink
-            to="/landing#features"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " nav-link-active" : "")
-            }
-          >
-            Features
-          </NavLink>
-        </li> */}
-
-        {/* <li>
-          <NavLink
-            to="/paper"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " nav-link-active" : "")
-            }
-          >
-            Prototype
-          </NavLink>
-        </li> */}
-
         <li>
           {/* About section on the landing page */}
           <NavLink

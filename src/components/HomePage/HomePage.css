@@ -46,7 +46,12 @@
 }
 
 .rail-title {
-  font-size: 1.05rem;
+  /* font-size: 1.05rem; */
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6c584c;
 }
 
 .icon-btn {
