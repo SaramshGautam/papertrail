@@ -1,0 +1,26 @@
+.sim-tree-wrap {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 8px;
+  background: #fafafa;
+}
+
+.sim-tree-svg {
+  width: 100%;
+  height: auto;
+}
+
+.sim-tree-empty {
+  font-size: 0.9rem;
+  color: #555;
+  padding: 8px;
+}
+
+.sim-tree-legend {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: #444;
+}

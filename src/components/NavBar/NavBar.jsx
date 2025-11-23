@@ -1,29 +1,66 @@
 import React from "react";
+import { Link, NavLink } from "react-router-dom";
 import "./navbar.css";
 import logo from "../../assets/logo.png";
 
 function NavBar() {
   return (
     <nav className="navbar">
+      {/* Logo → main landing/projects page */}
       <div className="navbar-logo">
-        <img src={logo} alt="PaperTrail Logo" className="logo-img" />
-        <span className="logo-text">PaperTrail</span>
+        <Link to="/landing" className="logo-link">
+          <img src={logo} alt="PaperTrail Logo" className="logo-img" />
+          <span className="logo-text">PaperTrail</span>
+        </Link>
       </div>
+
       <ul className="navbar-links">
+        {/* These keep the same labels, but now use routes */}
+        {/* <li>
+          <NavLink
+            to="/landing#features"
+            className={({ isActive }) =>
+              "nav-link" + (isActive ? " nav-link-active" : "")
+            }
+          >
+            Features
+          </NavLink>
+        </li> */}
+
+        {/* <li>
+          <NavLink
+            to="/paper"
+            className={({ isActive }) =>
+              "nav-link" + (isActive ? " nav-link-active" : "")
+            }
+          >
+            Prototype
+          </NavLink>
+        </li> */}
+
         <li>
-          <a href="#features">Features</a>
+          {/* About section on the landing page */}
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              "nav-link" + (isActive ? " nav-link-active" : "")
+            }
+          >
+            About
+          </NavLink>
         </li>
-        <li>
-          <a href="#prototype">Prototype</a>
-        </li>
-        <li>
-          <a href="#about">About</a>
-        </li>
-        <li>
-          <a href="#contact" className="nav-btn">
+
+        {/* <li>
+
+          <NavLink
+            to="/landing#contact"
+            className={({ isActive }) =>
+              "nav-btn" + (isActive ? " nav-btn-active" : "")
+            }
+          >
             Get Started
-          </a>
-        </li>
+          </NavLink>
+        </li> */}
       </ul>
     </nav>
   );

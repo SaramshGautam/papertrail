@@ -1,0 +1,22 @@
+/* Make SVG background white */
+.force-graph-svg {
+  width: 100%;
+  height: 100%;
+  background: #f4f5f7 !important;
+}
+
+/* Make all text black */
+.force-graph-svg text {
+  fill: #000000 !important;
+  stroke: none !important;
+}
+
+/* Optional: darken link lines slightly for visibility */
+.force-graph-svg line {
+  stroke: #444 !important;
+}
+
+/* Optional: darken the node labels on hover */
+.force-graph-svg g:hover text {
+  fill: #000000 !important;
+}

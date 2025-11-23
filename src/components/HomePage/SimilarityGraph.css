@@ -1,0 +1,25 @@
+.sim-graph-wrap {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 8px;
+  background: #fafafa;
+}
+
+.sim-graph-svg {
+  width: 100%;
+  height: auto;
+}
+
+.sim-graph-empty {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.sim-graph-legend {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: #444;
+}

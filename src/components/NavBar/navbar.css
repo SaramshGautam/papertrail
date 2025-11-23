@@ -4,8 +4,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 40px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e6e6e6;
+  background-color: #fff;
+  border-bottom: 1px solid #6c584c;
   /* position: absolute; */
   position: sticky;
   top: 0;
@@ -15,27 +15,45 @@
 }
 
 /* ========== Logo Section ========== */
-.navbar-logo {
+/* .navbar-logo {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 10px;
-}
+  white-space: nowrap;
+} */
 
 .logo-img {
   height: 36px;
   width: auto;
+  display: inline-block;
 }
 
+.navbar-logo a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+/* a:-webkit-any-link {
+  color: -webkit-link;
+  cursor: pointer;
+  text-decoration: none;
+} */
+
 .logo-text {
+  display: inline-block;
   font-size: 1.3rem;
   font-weight: 600;
-  color: #142634;
+  color: #6c584c;
   letter-spacing: 0.5px;
+  line-height: 1;
 }
 
 /* ========== Links Section ========== */
 .navbar-links {
   display: flex;
+  align-items: center;
   gap: 30px;
   list-style: none;
 }

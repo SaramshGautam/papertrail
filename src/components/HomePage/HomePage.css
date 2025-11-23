@@ -180,3 +180,29 @@
 .canvas-wrap {
   background: #000;
 }
+
+.root-selector {
+  padding: 6px 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+  background: #fafafa;
+}
+
+.paper-item-active {
+  background: #fff7e0;
+  border-left: 3px solid #ff9800;
+}
+
+.similarity-panel {
+  padding: 8px 12px;
+  border-top: 1px solid #e0e0e0;
+  background: #fdfdfd;
+}
+
+.sim-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+}

@@ -8,19 +8,21 @@ import Landing from "./components/LandingPage/Landing";
 import HomePage from "./components/HomePage/HomePage";
 import PaperPage from "./components/PaperPage/PaperPage";
 import WritingPage from "./components/WritingPage/WritingPage";
+import About from "./components/About/About";
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
-  return user ? children : <Navigate to="/login" replace />;
+  return user ? children : <Navigate to="/papertrail/login" replace />;
 }
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/papertrail">
         <NavBar />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/landing"
@@ -31,7 +33,7 @@ function App() {
             }
           />
           <Route
-            path="/home"
+            path="/home/:projectId"
             element={
               <PrivateRoute>
                 <HomePage />
@@ -39,7 +41,7 @@ function App() {
             }
           />
           <Route
-            path="/paper"
+            path="/paper/:projectId"
             element={
               <PrivateRoute>
                 <PaperPage />
@@ -47,7 +49,7 @@ function App() {
             }
           />
           <Route
-            path="/writing"
+            path="/writing/:projectId"
             element={
               <PrivateRoute>
                 <WritingPage />

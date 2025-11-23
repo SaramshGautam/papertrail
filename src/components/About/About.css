@@ -1,0 +1,161 @@
+/* 70% primary background */
+.about-wrap {
+  min-height: 100vh;
+  background: #f0ead2;
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px 60px;
+  box-sizing: border-box;
+}
+
+/* Main container */
+.about-container {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 2px solid #adc178; /* secondary */
+  padding: 32px 32px 40px;
+  box-shadow: 0 14px 30px rgba(108, 88, 76, 0.12);
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Hero */
+.about-hero h1 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  color: #6c584c; /* tertiary */
+}
+
+.about-tagline {
+  margin: 0 0 24px;
+  font-size: 1rem;
+  color: #6c584ccc;
+}
+
+/* Sections */
+.about-section {
+  margin-top: 28px;
+}
+
+.about-section h2 {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  color: #6c584c;
+}
+
+.about-section p {
+  margin: 0 0 10px;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #4b463f;
+}
+
+/* Lists */
+.about-list {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  font-size: 0.97rem;
+  color: #4b463f;
+}
+
+.about-list li + li {
+  margin-top: 6px;
+}
+
+.about-steps {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  font-size: 0.97rem;
+  color: #4b463f;
+}
+
+.about-steps li + li {
+  margin-top: 6px;
+}
+
+/* Highlight section */
+.about-highlight {
+  background: #f7f3e2;
+  border-radius: 14px;
+  padding: 18px 18px 6px;
+  border: 1px solid #adc178;
+}
+
+/* Pill cards for principles */
+.about-pill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.about-pill {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e0d0;
+  padding: 12px 14px;
+}
+
+.about-pill h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  color: #6c584c;
+}
+
+.about-pill p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #4b463f;
+}
+
+/* Footer-ish section */
+.about-footer {
+  border-top: 1px solid #e0d7b8;
+  padding-top: 20px;
+  margin-top: 32px;
+}
+
+.about-callout {
+  margin-top: 6px;
+  font-weight: 500;
+  color: #6c584c;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .about-container {
+    padding: 24px 18px 30px;
+  }
+
+  .about-hero h1 {
+    font-size: 1.7rem;
+  }
+}
+
+.about-login-section {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.about-login-btn {
+  background: #6c584c; /* tertiary (10%) */
+  color: #f0ead2; /* primary */
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.about-login-btn:hover {
+  background: #56463a;
+  transform: translateY(-2px);
+}
+
+.about-login-btn:active {
+  transform: translateY(0);
+}

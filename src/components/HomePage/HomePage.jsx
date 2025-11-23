@@ -1,32 +1,147 @@
-import React, { useState, useRef } from "react";
-import Whiteboard from "../WhiteBoard/Whiteboard";
-import papers from "../../data/papers.json";
+// src/components/HomePage/HomePage.jsx
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom"; // 👈 import Link
+import ForceGraph from "../ForceGraph/ForceGraph";
 import {
   extractPdfMetadata,
   extractPdfTitleAuthorsHeuristic,
 } from "../../utils/pdfMeta";
 import "./HomePage.css";
 
+import { db, storage } from "../../firebaseConfig";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp,
+  increment,
+} from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+const INGEST_ENDPOINT = "http://127.0.0.1:8000/process_papers/urls";
+const SIMILARITY_ENDPOINT = "http://127.0.0.1:8000/similarity/papers";
+
+async function computeSimilaritiesForProject(projectId, papers) {
+  try {
+    const payload = {
+      project_id: projectId,
+      papers: papers.map((p) => ({
+        paper_id: p.id,
+        title: p.title || "",
+        abstract: p.abstract || "",
+        references: p.references || "",
+        authors: p.author || p.sub || "",
+      })),
+    };
+
+    console.log("[SIM] Sending payload to backend:", payload);
+
+    const res = await fetch(SIMILARITY_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Similarity service returned ${res.status}`);
+    }
+
+    const data = await res.json();
+    console.log("[SIM] Backend response:", data);
+    return data.paper_similarities || [];
+  } catch (err) {
+    console.error("[SIM] Error calling similarity service", err);
+    return [];
+  }
+}
+
+async function ingestPaperMetadata({ projectId, paperId, fileUrl }) {
+  try {
+    const res = await fetch(INGEST_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        papers: [
+          {
+            download_url: fileUrl,
+            project_id: projectId,
+            paper_id: paperId,
+          },
+        ],
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Ingest service returned ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data[0] || null;
+  } catch (err) {
+    console.error("Error calling ingest service", err);
+    return null;
+  }
+}
+
 export default function HomePage() {
-  const wbRef = useRef(null);
+  const { projectId } = useParams();
 
-  const [uploadedPaper, setUploadedPaper] = useState([]);
+  const [papers, setPapers] = useState([]);
+  const [similarities, setSimilarities] = useState([]);
+  const [metric, setMetric] = useState("overall");
+  const [minScore, setMinScore] = useState(0.4);
+  const [selectedPaper, setSelectedPaper] = useState(null); // 👈 used for highlighting / routing
 
-  // const addPaperToCanvas = (p) => {
-  //   const text = `${p.title}\n${p.sub}`;
-  //   wbRef.current?.addPaperCard(text);
-  // };
+  // Fetch papers
+  useEffect(() => {
+    if (!projectId) return;
 
-  const onPaperClick = (p) => {
-    wbRef.current?.addOrSelectPaper(p);
-  };
+    const papersCol = collection(db, "projects", projectId, "papers");
+    const q = query(papersCol, orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const docs = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setPapers(docs);
+
+      // pick first as default selection
+      if (!selectedPaper && docs.length > 0) {
+        setSelectedPaper(docs[0]);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [projectId]);
+
+  // Fetch similarities
+  useEffect(() => {
+    if (!projectId) return;
+
+    const simCol = collection(db, "projects", projectId, "similarities");
+    const unsub = onSnapshot(simCol, (snapshot) => {
+      const docs = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setSimilarities(docs);
+    });
+
+    return () => unsub();
+  }, [projectId]);
 
   const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files?.[0];
+    if (!file || !projectId) return;
 
     let meta = {};
     let heuristic = {};
+
     try {
       meta = await extractPdfMetadata(file);
     } catch (err) {
@@ -40,7 +155,7 @@ export default function HomePage() {
       try {
         heuristic = await extractPdfTitleAuthorsHeuristic(file);
       } catch (err) {
-        console.error("Heuristic title/author extarction failed", err);
+        console.error("Heuristic title/author extraction failed", err);
       }
     }
 
@@ -55,34 +170,95 @@ export default function HomePage() {
       (heuristic.author && heuristic.author.trim()) ||
       "";
 
-    //1. preview or parse file name
+    try {
+      const storageRef = ref(
+        storage,
+        `projects/${projectId}/papers/${Date.now()}-${file.name}`
+      );
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
 
-    const newPaper = {
-      id: `paper-${Date.now()}`,
-      title,
-      sub: author || "Uploaded PDF",
-      author,
-      subject: meta.subject || "",
-      file,
-    };
+      const papersCol = collection(db, "projects", projectId, "papers");
+      const paperRef = await addDoc(papersCol, {
+        projectId,
+        title,
+        sub: author || "Uploaded PDF",
+        author,
+        subject: meta.subject || "",
+        fileName: file.name,
+        fileUrl: url,
+        createdAt: serverTimestamp(),
+      });
 
-    // const newPaper = {
-    //   id: `paper-${Date.now()}`,
-    //   title: meta.title || file.name.replace(/\.pdf$/i, ""),
-    //   sub: meta.author || "Uploaded PDF",
-    //   author: meta.author || "",
-    //   subject: meta.subject || "",
-    //   file,
-    // };
-    setUploadedPaper((prev) => [newPaper, ...prev]);
+      await updateDoc(doc(db, "projects", projectId), {
+        pdfCount: increment(1),
+      });
 
-    // immediately drop it onto canvas
-    wbRef.current?.addOrSelectPaper(newPaper);
+      const ingestResult = await ingestPaperMetadata({
+        projectId,
+        paperId: paperRef.id,
+        fileUrl: url,
+      });
+
+      if (ingestResult) {
+        const {
+          title: parsedTitle,
+          authors: parsedAuthors,
+          abstract,
+          references,
+          raw_text_excerpt,
+        } = ingestResult;
+
+        await updateDoc(doc(db, "projects", projectId, "papers", paperRef.id), {
+          title: parsedTitle || title,
+          author: parsedAuthors || author,
+          abstract: abstract || null,
+          references: references || null,
+          rawTextExcerpt: raw_text_excerpt || null,
+        });
+      }
+    } catch (err) {
+      console.error("Error uploading file or saving Firestore doc", err);
+    }
 
     e.target.value = "";
   };
 
-  const allPapers = [...uploadedPaper, ...papers];
+  const handleComputeSimilarities = async () => {
+    if (!projectId) return;
+    if (!papers.length) {
+      console.log("[SIM] No papers to compare");
+      return;
+    }
+
+    console.log("[SIM] Computing similarities for project:", projectId);
+
+    const simResults = await computeSimilaritiesForProject(projectId, papers);
+    if (!simResults.length) {
+      console.log("[SIM] No similarity results returned");
+      return;
+    }
+
+    try {
+      const simCol = collection(db, "projects", projectId, "similarities");
+
+      const writes = simResults.map((entry) =>
+        addDoc(simCol, {
+          ...entry,
+          projectId,
+          createdAt: serverTimestamp(),
+        })
+      );
+
+      await Promise.all(writes);
+      console.log(
+        "[SIM] Saved similarity entries to Firestore:",
+        simResults.length
+      );
+    } catch (err) {
+      console.error("[SIM] Error writing similarities to Firestore", err);
+    }
+  };
 
   return (
     <div className="home-wrap">
@@ -90,9 +266,6 @@ export default function HomePage() {
       <aside className="left-rail">
         <div className="rail-topbar">
           <div className="rail-title">Papers</div>
-          {/* <button className="icon-btn" title="Add paper">
-            ＋
-          </button> */}
 
           <label className="icon-btn" title="Add paper pdf">
             ＋
@@ -103,14 +276,28 @@ export default function HomePage() {
               onChange={handleUpload}
             />
           </label>
+
+          <button
+            className="icon-btn"
+            type="button"
+            onClick={handleComputeSimilarities}
+            title="Compute similarities between papers"
+          >
+            ⇆
+          </button>
         </div>
 
         <ul className="paper-list">
-          {allPapers.map((p) => (
+          {papers.map((p) => (
             <li
               key={p.id}
-              className="paper-item"
-              onClick={() => onPaperClick(p)}
+              className={
+                "paper-item" +
+                (selectedPaper && selectedPaper.id === p.id
+                  ? " is-selected"
+                  : "")
+              }
+              onClick={() => setSelectedPaper(p)} // 👈 FIXED: update selectedPaper
             >
               <div className="avatar" />
               <div className="paper-text">
@@ -118,6 +305,12 @@ export default function HomePage() {
                 <div className="paper-sub">
                   {p.sub || p.author || "Uploaded Paper PDF"}
                 </div>
+                {p.abstract && (
+                  <div className="paper-abstract">
+                    {p.abstract.slice(0, 120)}
+                    {p.abstract.length > 120 ? "..." : ""}
+                  </div>
+                )}
               </div>
               <div className="chev">›</div>
             </li>
@@ -125,25 +318,73 @@ export default function HomePage() {
         </ul>
       </aside>
 
-      {/* RIGHT CANVAS AREA */}
+      {/* RIGHT AREA */}
       <section className="canvas-wrap">
         <div className="topbar">
-          <div className="title">Mind Map</div>
+          <div className="title">Similarity Map</div>
 
           <div className="topbar-right">
-            <div className="search">
-              <span className="search-icon">🔍</span>
-              <input placeholder="Search" />
-            </div>
-            <div className="profile-badge" title="Account" />
+            {/* metric controls */}
+            <label className="metric-select">
+              Metric:
+              <select
+                value={metric}
+                onChange={(e) => setMetric(e.target.value)}
+              >
+                <option value="overall">Overall</option>
+                <option value="title">Title</option>
+                <option value="abstract">Abstract</option>
+                <option value="authors">Authors</option>
+                <option value="references">References</option>
+              </select>
+            </label>
+
+            <label className="metric-select">
+              Min score: {minScore.toFixed(2)}
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={minScore}
+                onChange={(e) => setMinScore(parseFloat(e.target.value))}
+              />
+            </label>
+
+            {/* 👇 NEW: navigation to paper + writing views, with projectId */}
+            {projectId && (
+              <>
+                <Link
+                  to={`/paper/${projectId}`}
+                  className="btn small"
+                  title="Open PDF reading + insight capture"
+                >
+                  Open Papers
+                </Link>
+                <Link
+                  to={`/writing/${projectId}`}
+                  className="btn small"
+                  title="Open writing workspace for this project"
+                >
+                  Open Writing
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
         <div className="canvas-area">
-          <Whiteboard ref={wbRef} />
+          <ForceGraph
+            papers={papers}
+            similarities={similarities}
+            metric={metric}
+            minScore={minScore}
+            onNodeClick={(node) => {
+              const p = papers.find((pp) => pp.id === node.id);
+              if (p) setSelectedPaper(p);
+            }}
+          />
         </div>
-
-        <button className="write-cta">✍︎ Write</button>
       </section>
     </div>
   );
