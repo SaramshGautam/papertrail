@@ -1,4 +1,3 @@
-// src/components/HomePage/HomePage.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom"; // 👈 import Link
 import ForceGraph from "../ForceGraph/ForceGraph";
