@@ -12,13 +12,14 @@ import About from "./components/About/About";
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
-  return user ? children : <Navigate to="/papertrail/login" replace />;
+  return user ? children : <Navigate to="/login" replace />;
 }
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter basename="/papertrail">
+      {/* <BrowserRouter basename="/papertrail"> */}
+      <BrowserRouter>
         <NavBar />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
