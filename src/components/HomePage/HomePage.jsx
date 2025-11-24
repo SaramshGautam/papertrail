@@ -23,8 +23,12 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-const INGEST_ENDPOINT = "http://127.0.0.1:8000/process_papers/urls";
-const SIMILARITY_ENDPOINT = "http://127.0.0.1:8000/similarity/papers";
+const INGEST_ENDPOINT =
+  "https://papertrail-o2guomx2ea-uc.a.run.app/process_papers/urls";
+const SIMILARITY_ENDPOINT =
+  "https://papertrail-o2guomx2ea-uc.a.run.app/similarity/papers";
+// const INGEST_ENDPOINT = "http://127.0.0.1:8000/process_papers/urls";
+// const SIMILARITY_ENDPOINT = "http://127.0.0.1:8000/similarity/papers";
 
 async function computeSimilaritiesForProject(projectId, papers) {
   try {

@@ -16,7 +16,9 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-const SUGGEST_ENDPOINT = "http://127.0.0.1:8000/suggest_papers";
+// const SUGGEST_ENDPOINT = "http://127.0.0.1:8000/suggest_papers";
+const SUGGEST_ENDPOINT =
+  "https://papertrail-o2guomx2ea-uc.a.run.app/suggest_papers";
 
 function deriveCiteKey(paperLike) {
   const authors = paperLike.authors || "";

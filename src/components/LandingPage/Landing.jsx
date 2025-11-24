@@ -21,7 +21,9 @@ import {
   extractPdfTitleAuthorsHeuristic,
 } from "../../utils/pdfMeta";
 
-const INGEST_ENDPOINT = "http://127.0.0.1:8000/process_papers/urls";
+const INGEST_ENDPOINT =
+  "https://papertrail-o2guomx2ea-uc.a.run.app/process_papers/urls";
+// const INGEST_ENDPOINT = "http://127.0.0.1:8000/process_papers/urls";
 
 async function ingestPaperMetadata({ projectId, paperId, fileUrl }) {
   try {
