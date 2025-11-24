@@ -411,10 +411,7 @@ export default function PaperPage() {
         </form>
 
         <div className="helper">
-          <p className="muted">
-            Tip: In mid-fi, bind selection from the PDF to auto-fill "Quote" and
-            detect page.
-          </p>
+          <p className="muted">List of insights:</p>
         </div>
 
         {selectedPaper && (
