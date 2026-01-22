@@ -12,6 +12,8 @@ import {
   orderBy,
   doc,
   updateDoc,
+  deleteDoc,
+  getDocs,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -96,6 +98,25 @@ export default function Landing() {
     setEditingId(null);
     setEditTitle("");
     setEditDesc("");
+  };
+
+  const handleDeleteProject = async (projectId, title) => {
+    const ok = window.confirm(
+      `Delete project "${title || "Untitled"}"?\n\nThis cannot be undone.`
+    );
+    if (!ok) return;
+
+    try {
+      const papersSnap = await getDocs(
+        collection(db, "projects", projectId, "papers")
+      );
+      await Promise.all(papersSnap.docs.map((d) => deleteDoc(d.ref)));
+
+      await deleteDoc(doc(db, "projects", projectId));
+    } catch (err) {
+      console.error("Error deleting project", err);
+      alert("Could not delete project. Check console for details.");
+    }
   };
 
   const handleUpdateProject = async (e, projectId) => {
@@ -320,6 +341,15 @@ export default function Landing() {
                 onClick={() => startEditProject(p)}
               >
                 <i className="fas fa-pen"></i>
+              </button>
+
+              <button
+                type="button"
+                className="icon-button delete-btn"
+                onClick={() => handleDeleteProject(p.id, p.title)}
+                title="Delete project"
+              >
+                <i className="fas fa-trash"></i>
               </button>
 
               {editingId === p.id ? (

@@ -79,7 +79,8 @@
 }
 
 .project-card {
-  border: 1px solid #adc178; /* secondary */
+  position: relative;
+  border: 1px solid #adc178;
   border-radius: 14px;
   padding: 20px;
   background: #ffffff;
@@ -231,10 +232,20 @@
 }
 
 /* icon button for edit */
-.icon-button {
+/* .icon-button {
   border: none;
   background: transparent;
   padding: 0;
+  cursor: pointer;
+} */
+.icon-button {
+  position: absolute;
+  top: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  background: transparent;
+  border: none;
   cursor: pointer;
 }
 
@@ -242,6 +253,11 @@
 .project-card {
   position: relative;
   /* existing styles stay */
+}
+
+.project-card:hover .icon-button {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .edit-btn {
@@ -255,7 +271,28 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 40px;
+  color: #6c584c;
+  background: #ed978d;
+  border-radius: 999px;
+  padding: 4px 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  font-size: 0.75rem;
+}
+
+.delete-btn i {
+  opacity: 0.8;
+}
+.delete-btn:hover i {
+  opacity: 1;
 }
 
 .project-card:hover .edit-btn {
