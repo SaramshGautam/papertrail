@@ -140,6 +140,9 @@ export default function HomePage() {
   const [selectedPaper, setSelectedPaper] = useState(null);
   const [projectInfo, setProjectInfo] = useState(null);
   const [paperColorMap, setPaperColorMap] = useState({});
+  const [editingPaperId, setEditingPaperId] = useState(null);
+  const [editPaperTitle, setEditPaperTitle] = useState("");
+  const [editPaperAuthor, setEditPaperAuthor] = useState("");
 
   const prevPaperCountRef = useRef(0);
 
@@ -307,6 +310,74 @@ export default function HomePage() {
     e.target.value = "";
   };
 
+  const startEditPaper = (paper) => {
+    setEditingPaperId(paper.id);
+    setEditPaperTitle(paper.title || "");
+    setEditPaperAuthor(paper.sub || "");
+  };
+
+  const cancelEditPaper = () => {
+    setEditingPaperId(null);
+    setEditPaperTitle("");
+    setEditPaperAuthor("");
+  };
+
+  const saveEditPaper = async (e, paperId) => {
+    e.preventDefault();
+    if (!projectId) return;
+
+    const title = editPaperTitle.trim();
+    if (!title) {
+      alert("Title cannot be empty.");
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, "projects", projectId, "papers", paperId), {
+        title,
+        author: editPaperAuthor.trim() || "Authors",
+        sub: editPaperAuthor.trim() || "Authors",
+        updatedAt: serverTimestamp(),
+      });
+      cancelEditPaper();
+    } catch (err) {
+      console.error("Error updating paper", err);
+      alert("Could not update paper. Check console.");
+    }
+  };
+
+  const deletePaper = async (paper) => {
+    if (!projectId) return;
+
+    const ok = window.confirm(
+      `Delete this paper?\n\n${
+        paper.title || paper.fileName || paper.id
+      }\n\nThis cannot be undone.`
+    );
+    if (!ok) return;
+
+    try {
+      // delete paper doc
+      await deleteDoc(doc(db, "projects", projectId, "papers", paper.id));
+
+      // decrement pdfCount
+      await updateDoc(doc(db, "projects", projectId), {
+        pdfCount: increment(-1),
+      });
+
+      // OPTIONAL: clear similarities so graph doesn't show stale links
+      const simCol = collection(db, "projects", projectId, "similarities");
+      const existing = await getDocs(simCol);
+      await Promise.all(existing.docs.map((d) => deleteDoc(d.ref)));
+
+      // clear selection if deleted was selected
+      if (selectedPaper?.id === paper.id) setSelectedPaper(null);
+    } catch (err) {
+      console.error("Error deleting paper", err);
+      alert("Could not delete paper. Check console.");
+    }
+  };
+
   // const handleComputeSimilarities = async () => {
   //   if (!projectId) return;
   //   if (!papers.length) {
@@ -396,18 +467,99 @@ export default function HomePage() {
               />
 
               <div className="paper-text">
-                <div className="paper-title">{p.title}</div>
-                <div className="paper-sub">
-                  {p.sub || p.author || "Uploaded Paper PDF"}
-                </div>
-                {p.abstract && (
-                  <div className="paper-abstract">
-                    {p.abstract.slice(0, 120)}
-                    {p.abstract.length > 120 ? "..." : ""}
+                {editingPaperId === p.id ? (
+                  <form
+                    className="paper-edit-form"
+                    onSubmit={(e) => saveEditPaper(e, p.id)}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <label className="paper-edit-field">
+                      <span className="paper-edit-label">Title</span>
+                      <input
+                        className="paper-edit-input"
+                        value={editPaperTitle}
+                        onChange={(e) => setEditPaperTitle(e.target.value)}
+                        placeholder="e.g., Attention Is All You Need"
+                        required
+                      />
+                    </label>
+
+                    <label className="paper-edit-field">
+                      <span className="paper-edit-label">Authors</span>
+                      <input
+                        className="paper-edit-input"
+                        value={editPaperAuthor}
+                        onChange={(e) => setEditPaperAuthor(e.target.value)}
+                        placeholder="e.g., Vaswani et al."
+                      />
+                    </label>
+
+                    <div className="paper-edit-actions">
+                      <button type="submit" className="paper-mini-btn">
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        className="paper-mini-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          cancelEditPaper();
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="paper-title">{p.title}</div>
+                    <div className="paper-sub">
+                      {p.sub || p.author || "Authors"}
+                    </div>
+                    {p.abstract && (
+                      <div className="paper-abstract">
+                        {p.abstract.slice(0, 120)}
+                        {p.abstract.length > 120 ? "..." : ""}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* bottom actions (only show when NOT editing) */}
+                {editingPaperId !== p.id && (
+                  <div
+                    className="paper-actions"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Link
+                      to={`/paper/${projectId}?paperId=${p.id}`}
+                      className="paper-action-btn"
+                      title="Open in reader"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <i className="fas fa-eye"></i>
+                    </Link>
+                    <button
+                      type="button"
+                      className="paper-action-btn"
+                      title="Edit paper"
+                      onClick={() => startEditPaper(p)}
+                    >
+                      <i className="fas fa-pen"></i>
+                    </button>
+                    <button
+                      type="button"
+                      className="paper-action-btn danger"
+                      title="Delete paper"
+                      onClick={() => deletePaper(p)}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
                   </div>
                 )}
               </div>
-              <div className="chev">›</div>
+
+              {/* <div className="chev">›</div> */}
             </li>
           ))}
         </ul>

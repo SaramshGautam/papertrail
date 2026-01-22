@@ -97,6 +97,7 @@
 } */
 
 .paper-item {
+  /* position: relative; */
   display: grid;
   grid-template-columns: 40px 1fr 18px;
   gap: 12px;
@@ -121,6 +122,74 @@
   border-color: #adc178;
 }
 
+.paper-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  align-items: center;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.paper-item:hover .paper-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.paper-action-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.paper-action-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.paper-action-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.18);
+}
+
+/* inline edit form */
+.paper-edit-form {
+  display: grid;
+  gap: 6px;
+}
+
+.paper-edit-input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  /* background: rgba(232, 234, 239, 0.811); */
+  color: inherit;
+  outline: none;
+}
+
+.paper-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.paper-mini-btn {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(17, 24, 39, 0.25);
+  color: inherit;
+  border-radius: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.paper-mini-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .avatar {
   width: 40px;
   height: 40px;
@@ -130,6 +199,9 @@
 
 .paper-text {
   min-width: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 8px;
 }
 
 .paper-title {
