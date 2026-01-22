@@ -6,6 +6,7 @@ import {
   extractPdfTitleAuthorsHeuristic,
 } from "../../utils/pdfMeta";
 import "./HomePage.css";
+import * as d3 from "d3";
 
 import { db, storage } from "../../firebaseConfig";
 import {
@@ -130,16 +131,26 @@ async function ingestPaperMetadata({ projectId, paperId, fileUrl }) {
 export default function HomePage() {
   const { projectId } = useParams();
 
+  const nodeColor = d3.scaleOrdinal(d3.schemeTableau10);
+
   const [papers, setPapers] = useState([]);
   const [similarities, setSimilarities] = useState([]);
   const [metric, setMetric] = useState("overall");
   const [minScore, setMinScore] = useState(0.4);
   const [selectedPaper, setSelectedPaper] = useState(null);
   const [projectInfo, setProjectInfo] = useState(null);
+  const [paperColorMap, setPaperColorMap] = useState({});
 
   const prevPaperCountRef = useRef(0);
 
-  //get project name
+  useEffect(() => {
+    const map = {};
+    papers.forEach((p, i) => {
+      map[p.id] = nodeColor(i);
+    });
+    setPaperColorMap(map);
+  }, [papers]);
+
   useEffect(() => {
     if (!projectId) return;
 
@@ -378,7 +389,12 @@ export default function HomePage() {
               }
               onClick={() => setSelectedPaper(p)}
             >
-              <div className="avatar" />
+              {/* <div className="avatar" /> */}
+              <div
+                className="avatar"
+                style={{ backgroundColor: paperColorMap[p.id] || "#9ca3af" }}
+              />
+
               <div className="paper-text">
                 <div className="paper-title">{p.title}</div>
                 <div className="paper-sub">

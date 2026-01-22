@@ -109,10 +109,16 @@
   color: #6c584c;
   font-weight: 500;
   font-size: 0.9rem;
+  transition: color 0.15s ease, font-weight 0.15s ease;
 }
 
-.open-link:hover {
+.project-card:hover .open-link {
+  font-weight: 700;
   text-decoration: underline;
+  color: #6b4f3b;
+  background-color: #f0ead2;
+  padding: 4px 6px;
+  border-radius: 999px;
 }
 
 /* Add New Project Card */
