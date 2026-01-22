@@ -1,47 +1,83 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import usersData from "../../data/users.json";
 import { useAuth } from "../../auth/AuthContext";
 import "./login.css";
 
 export default function Login() {
-  const [id, setId] = useState("");
+  const [mode, setMode] = useState("login"); // "login" | "signup"
+  const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const [name, setName] = useState(""); // only for signup
   const [error, setError] = useState("");
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const [busy, setBusy] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const { login, signup } = useAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setBusy(true);
 
-    const match = usersData.users.find(
-      (u) => u.id === id.trim() && u.password === pwd
-    );
+    try {
+      const cleanEmail = email.trim();
 
-    if (!match) {
-      setError("Invalid ID or password.");
-      return;
+      if (mode === "signup") {
+        // creates Firebase Auth user + Firestore /users/{uid} doc (inside AuthContext)
+        await signup(cleanEmail, pwd, name.trim());
+      } else {
+        await login(cleanEmail, pwd);
+      }
+
+      navigate("/landing");
+    } catch (err) {
+      const code = err?.code || "";
+
+      if (code === "auth/email-already-in-use")
+        setError("Email is already in use.");
+      else if (code === "auth/invalid-email")
+        setError("Invalid email address.");
+      else if (code === "auth/weak-password")
+        setError("Password must be at least 6 characters.");
+      else if (code === "auth/user-not-found")
+        setError("No account found with that email.");
+      else if (code === "auth/wrong-password") setError("Wrong password.");
+      else setError(err?.message || "Something went wrong.");
+    } finally {
+      setBusy(false);
     }
-
-    // Store only safe fields
-    login({ id: match.id, name: match.name });
-    navigate("/landing");
   };
 
   return (
     <div className="login-wrap">
       <form className="login-card" onSubmit={handleSubmit}>
         <h1>PaperTrail</h1>
-        <p className="muted">Sign in to continue</p>
+        <p className="muted">
+          {mode === "signup" ? "Create an account" : "Sign in to continue"}
+        </p>
 
-        <label htmlFor="id">ID</label>
+        {mode === "signup" && (
+          <>
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              autoComplete="name"
+              required
+            />
+          </>
+        )}
+
+        <label htmlFor="email">Email</label>
         <input
-          id="id"
-          type="text"
+          id="email"
+          type="email"
           placeholder="you@example.com"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           autoComplete="username"
           required
         />
@@ -53,15 +89,38 @@ export default function Login() {
           placeholder="••••••••"
           value={pwd}
           onChange={(e) => setPwd(e.target.value)}
-          autoComplete="current-password"
+          autoComplete={mode === "signup" ? "new-password" : "current-password"}
+          minLength={6}
           required
         />
 
         {error && <div className="error">{error}</div>}
 
-        <button type="submit" className="login-btn">
-          Log In
+        <button type="submit" className="login-btn" disabled={busy}>
+          {busy ? "Please wait..." : mode === "signup" ? "Sign Up" : "Log In"}
         </button>
+
+        <div style={{ marginTop: 12, textAlign: "center" }}>
+          {mode === "signup" ? (
+            <button
+              type="button"
+              className="link-btn"
+              onClick={() => setMode("login")}
+              disabled={busy}
+            >
+              Already have an account? Log in
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="link-btn"
+              onClick={() => setMode("signup")}
+              disabled={busy}
+            >
+              New here? Create an account
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );
